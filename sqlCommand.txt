@@ -1,0 +1,57 @@
+=> SHOW DATABASES; // to see all the database; 
+
+=> USE hello_world;  // to use particular database;
+
+=> CREATE DATABASE cate_app;  // to crate database;
+
+=> SELECT database(); // which database we are using
+
+
+//////////// TABLE ///////////////
+
+=> Create Tabele 
+ CREATE TABLE cats (
+    name varchar(50),
+    age INT(11)
+);
+
+=> SHOW tables ; // show all the tables inside the current use database;
+
+=> SHOW COLUMNS FROM cats; || => DESC cate; // show table schema 
+
+=> DROP TABLE cats; // drop table from the database.
+
+=> Insert into single table 
+INSERT INTO unique_cats2 (name, age)
+VALUES ('Jetson', 7); 
+
+   -> Insert multiple data into table
+      INSERT INTO cats (name, age)
+      VALUES ('Jetson', 7),
+             ('jan', 6),
+             ('man', 5);
+
+=> view data from the table 
+SELECT * FROM cats;
+
+=> Create Tabele values are not Null
+ CREATE TABLE cats2 (
+    name varchar(100) NOT NULL,
+    age INT(11) NOT NULL
+);
+
+=> create Table with default value 
+ CREATE TABLE cats3 (
+    name varchar(50) NOT NULL DEFAULT 'unnamed',
+    age INT(11) NOT NULL DEFAULT 99
+);
+
+=>PRIMARY kEY CONCEPET 
+CREATE TABLE unique_cats2 (
+    cat_id INT NOT NULL AUTO_INCREMENT,
+    name varchar(100) , 
+    age INT,
+    PRIMARY KEY (cat_id)
+);
+
+
