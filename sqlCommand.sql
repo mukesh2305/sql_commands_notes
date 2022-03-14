@@ -9,7 +9,7 @@
 
 -- //////////// TABLE ///////////////
 
-=> Create Tabele 
+-- => Create Tabele 
  CREATE TABLE cats (
     name varchar(50),
     age INT(11)
@@ -25,7 +25,7 @@
 INSERT INTO unique_cats2 (name, age)
 VALUES ('Jetson', 7); 
 
-   -> Insert multiple data into table
+--    -> Insert multiple data into table
       INSERT INTO cats (name, age)
       VALUES ('Jetson', 7),
              ('jan', 6),
@@ -200,8 +200,221 @@ SELECT MAX(pages), title FROM book; -- => this will return the max pages and the
 
 SELECT * FROM book WHERE pages = (SELECT MIN(pages) FROM book); -- => this will return the min page row
 SELECT * FROM book WHERE pages = (SELECT MAX(pages) FROM book); -- => this will return the max page row
+
 SELECT title, pages FROM book WHERE pages = (SELECT MAX(pages) FROM book);
+SELECT title, pages FROM book ORDER BY pages DESC LIMIT 1;
 
 SELECT * FROM book ORDER BY pages ASC LIMIT 1 ;
 SELECT * FROM book ORDER BY pages ASC LIMIT 1 OFFSET 1;
+  
+    --------- MIN/MAX with GROUP BY ------------
+SELECT author_fname, author_lname, MIN(released_year) FROM book GROUP BY author_fname, author_lname;
+select MAX(pages) FROM book GROUP BY author_fname, author_lname;
 
+SELECT CONCAT(author_fname, " ", author_lname) AS author, MAX(pages) AS longest_book FROM book GROUP BY author_fname, author_lname;
+
+    --------- SUM with GROUP BY ------------
+SELECT SUM(pages) FROM book;
+SELECT SUM(released_year) FROM book;
+
+SELECT author_fname,author_lname, SUM(pages) FROM book GROUP BY  author_lname,author_fname;
+
+    --------- AVG with GROUP BY ------------
+SELECT AVG(released_year) FROM book;
+SELECT AVG(pages) FROM book;
+
+SELECT released_year,AVG(released_quantity) FROM book GROUP BY released_year;
+
+-- CHAR => has fixed length 
+-- VARCHAR => has variable length
+-- if CHAR(5) is used then the length of the string will be 5
+
+ 
+
+-- DECIMAL =>
+
+-- DECIMAL(10,2) => 10 digits, 2 decimal places
+-- DECIMAL(10,0) => 10 digits, 0 decimal places
+-- DECIMAL(10,5) => 10 digits, 5 decimal places
+
+-- FLOAT =>
+-- pricision problem in float 
+
+-- ///////// DATES & TIMES & DATETIME  //////////////
+
+
+
+--   => DATE
+-- value with dates but no times
+-- DATE => YYYY-MM-DD Format
+
+-- => TIME
+-- value with times but no dates
+-- TIME => HH:MM:SS Format
+
+-- => DATETIME
+-- value with dates and times
+-- DATETIME => YYYY-MM-DD HH:MM:SS Format
+
+CREATE TABLE people (
+    name VARCHAR(30),
+    birth_date DATE,
+    birth_time TIME,
+    birthdt DATETIME
+);
+
+INSERT INTO people (name, birth_date, birth_time, birthdt) 
+VALUES ('mukesh', '1999-05-23', '12:00:00', '1999-05-23 12:00:00');
+
+-- => DATE_FORMAT
+CURDATE() => current date
+CURTIME() => current time
+NOW() => current date and time
+
+date =1999-05-23
+DAY(date) => 23
+MONTH(date) => 5
+YEAR(date) => 1999
+DAYNAME(date) => sunday
+DAYOFWEEK(date) => 1
+DAYOFYEAR(date) => 
+
+INSERT INTO people (name, birth_date, birth_time, birthdt) 
+VALUES ('mahesh', CURDATE(),CURTIME() , NOW());
+
+SELECT name, DAY(birth_date) AS day, MONTH(birth_date) AS month, YEAR(birth_date) AS year, DAYNAME(birth_date), DAYOFWEEK(birth_date), DAYOFYEAR(birth_date)  FROM people;
+SELECT name, birthdt, DAYOFYEAR(birthdt), MONTH(birthdt), MONTHNAME(birthdt) FROM people;
+SELECT name, birth_time, HOUR(birth_time), MINUTE(birth_time), SECOND(birth_time) FROM people;
+SELECT DATE_FORMAT("2017-06-15", "%M %d %Y");
+SELECT DATE_FORMAT("2017-06-15", "%M-%d-%Y");
+SELECT DATE_FORMAT(birthdt, "%W") FROM people;
+
+-- if we want date in number formate then use small letters 
+SELECT DATE_FORMAT(birthdt, "%m/%d/%y at %h : %m") FROM people;
+
+
+-- => DATE MATH
+-- CURDATE()
+SELECT DATEDIFF(NOW(), birth_date) FROM people;
+SELECT birthdt, DATE_ADD(birthdt, INTERVAL 1 MONTH) FROM people;
+SELECT birthdt,  DATE_ADD(birthdt, INTERVAL 1 SECOND) FROM people;
+SELECT birthdt, DATE_SUB(birthdt, INTERVAL 1 MONTH) FROM people;
+SELECT birthdt, birthdt + INTERVAL 1 MONTH FROM people;
+SELECT birthdt, birthdt + INTERVAL 1 DAY + INTERVAL 10 HOUR FROM people;
+SELECT birthdt, birthdt - INTERVAL 1 MONTH FROM people;
+
+
+-- /////////////////////////////////////////////
+
+CREATE TABLE comments (
+    content VARCHAR(255),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE comments2 (
+    content VARCHAR(255),
+    created_at TIMESTAMP DEFAULT NOW() ON UPDATE CURRENT_TIMESTAMP
+);
+CREATE TABLE comments2 (
+    content VARCHAR(255),
+    created_at TIMESTAMP DEFAULT NOW() ON UPDATE NOW()
+);
+
+
+INSERT INTO comments (content) 
+VALUES   ('world'),
+         ('this is a comment'),
+         ('this is another comment');
+
+-- //////////////////////////////////////////////
+
+
+-- ////////////////////// LOGICAL OPERATORS ///////////////////////////////
+
+-- => != (not equal)
+SELECT title, author_lname, author_fname FROM book WHERE released_year != 2017;
+
+-- => NOT LIKE
+SELECT title FROM book WHERE title  NOT LIKE "A%";
+
+-- => > (greater than), < (less than), >= (greater than or equal to), <= (less than or equal to)
+SELECT title, author_lname, author_fname, released_year FROM book WHERE released_year < 2017;
+SELECT title, author_lname, author_fname, released_year FROM book WHERE released_year > 2003;
+SELECT title, author_lname, author_fname, released_year FROM book WHERE released_year <= 2017;
+SELECT title, author_lname, author_fname, released_year FROM book WHERE released_year >= 2003;
+
+-- just fun
+SELECT 99 > 1;  -- output = 1,  1 = true, 0 = false
+SELECT 99 < 1;  -- output = 0,  1 = true, 0 = false
+
+-- => LOGICAL AND(&&)
+SELECT title, author_lname, author_fname, released_year FROM book WHERE author_lname = 'Eggers' AND released_year > 2010;
+
+-- => LOGICAL OR(||)
+SELECT title, author_lname, released_year FROM book WHERE author_lname = 'Eggers' OR released_year > 2010;
+
+-- => BETWEEN (between) (logical and is pair with between)
+SELECT title, author_lname, released_year FROM book WHERE released_year BETWEEN 2000 AND 2010;
+
+-- => NOT BETWEEN (not between) (logical and is pair with not between)
+SELECT title, author_lname, released_year FROM book WHERE released_year NOT BETWEEN 2000 AND 2010;
+
+
+--> CAST() => change data type
+SELECT CAST('2017-05-02' AS DATETIME) ;
+SELECT name, birthdt from people WHERE birthdt BETWEEN CAST('1980-01-01' AS DATETIME) AND CAST('2000-01-01' AS DATETIME);
+
+
+-- => IN (in)  (in is same as OR)
+SELECT title, author_lname, released_year FROM book WHERE author_lname IN ('Eggers', 'Lahiri');
+
+
+-- => NOT IN (not in) 
+SELECT title, author_lname, released_year FROM book WHERE author_lname NOT IN ('Eggers', 'Lahiri');
+
+-- => % (modulus)
+SELECT title, author_lname, released_year FROM book WHERE released_year % 2 = 0;
+
+-- => CASE (case)
+SELECT title,  released_year,
+    CASE 
+        WHEN released_year >= 2000  THEN 'Modern Lit'
+        ELSE '20th Century Lit'
+    END AS GNERE;
+FROM book;
+
+SELECT title, released_quantity,
+    CASE 
+        WHEN released_quantity BETWEEN 0 AND 50  THEN '*'
+        WHEN released_quantity BETWEEN 51 AND 100 THEN '**'
+        ELSE '***'
+    END AS stock
+FROM book;
+
+
+-- => implicit inner join
+select * from customers, orders where customers.id = orders.customer_id;
+
+-- => Explicit inner join
+    select * from customers join orders on customers.id = orders.customer_id;
+    -- both are same
+    select * from customers inner join orders on customers.id = orders.customer_id;
+
+
+    select first_name, last_name, SUM(amount) as total_amount 
+    from customers join orders on customers.id = orders.customer_id group by orders.customer_id order by total_amount desc;
+
+-- => LEFT JOIN
+    select * from customers left join orders on customers.id = orders.customer_id ;
+
+    select 
+        first_name, 
+        last_name, 
+        IFNULL(SUM(amount), 0) as total_amount
+    FROM customers
+    LEFT JOIN orders
+    GROUP BY customers.id
+    ORDER BY total_amount;
+
+-- => RIGHT JOIN
+    select * from customers right join orders on customers.id = orders.customer_id ;
