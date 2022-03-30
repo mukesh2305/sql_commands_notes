@@ -244,7 +244,7 @@ LEFT join reviews
 GROUP BY reviewers.id;
 
 
--- challenge 7 title, rating, reviewer
+-- challenge 7 title, rating, reviewer - 3 Tables
 
 select 
     title,
@@ -254,5 +254,4 @@ from series
     inner join reviews on series.id = reviews.series_id
     inner join reviewers on reviewers.id = reviews.reviewer_id
 ORDER BY rating desc;
-
 

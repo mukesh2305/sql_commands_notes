@@ -163,7 +163,7 @@ SELECT author_fname, author_lname FROM book ORDER BY author_fname, author_lname 
 -- => LIMIT
 SELECT author_fname, author_lname FROM book ORDER BY author_fname, author_lname LIMIT 1 ;
 SELECT title FROM book ORDER BY author_fname, author_lname LIMIT 10 ;
-SELECT title FROM book ORDER BY author_fname LIMIT 1  ;
+SELECT title FROM book ORDER BY author_fname LIMIT 1;
 SELECT title FROM book ORDER BY author_fname LIMIT 10, 1 ;
 SELECT author_fname FROM book  LIMIT 2 OFFSET 1;
 
